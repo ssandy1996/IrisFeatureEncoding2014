@@ -1,0 +1,72 @@
+;************************************************************************
+; Copyright (C) 2014 S Sandeep Kumar (ee13b1025@iith.ac.in)
+;
+; This program is free software: you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation, either version 3 of the License, or
+; (at your option) any later version.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;------------------------------------------------------------------------
+; Function:
+;		Stores the IrisCode information i.e. template and mask
+;		information into two input arrays.
+;------------------------------------------------------------------------
+; Usage:
+;		void storeEncode(int (*)[outWidth], int (*)[outWidth],
+;		int (*)[inWidth], int (*)[inWidth], int (*)[inWidth],
+;		const int (*)[inWidth], int, int);
+;------------------------------------------------------------------------
+; Arguments:
+;		tempAdd - Address to store template information - int array
+;		maskAdd - Address to store mask information - int array
+;		h1Add - Address where h1 values are stored - int array
+;		h2Add - Address where h2 values are stored - int array
+;		h3Add - Address where h3 values are stored - int array
+;		noiseAdd - Address where noise values are stores - int array
+;		height - Height of input array - int
+;		length - Length of input array - int
+; -----------------------------------------------------------------------
+; Author:
+; 		S Sandeep Kumar
+; 		E-mail : ee13b1025@iith.ac.in
+;************************************************************************
+
+	.global storeEncode
+	.text
+
+storeEncode:.cproc tempAdd, maskAdd, h1Add, h2Add, h3Add, noiseAdd, height, length
+			.reg count, temp, nValue, tAdd, mAdd, h1, h2, h3, noise
+			ZERO count
+			ZERO temp
+			ZERO nValue
+			MV tempAdd, tAdd
+			MV maskAdd, mAdd
+			MV h1Add, h1
+			MV h2Add, h2
+			MV h3Add, h3
+			MV noiseAdd, noise
+			MPY height, length, count
+
+storeLoop:	LDW *h1++, temp
+			STW temp, *tAdd++	; Construct Biometric Template
+			LDW *h2++, temp
+			STW temp, *tAdd++	; Construct Biometric Template
+			LDW *h3++, temp
+			LDW *noise++, nValue
+			OR temp, nValue, temp
+			STW temp, *mAdd++	; Construct noise mask
+			STW temp, *mAdd++	; Construct noise mask
+			SUB count, 1, count
+			[count] B storeLoop
+			.endproc
+
+;************************************************************************
+; End of storeEncode.sa
+;************************************************************************

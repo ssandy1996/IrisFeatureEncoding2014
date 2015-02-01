@@ -1,0 +1,47 @@
+;************************************************************************
+; Copyright (C) 2014 S Sandeep Kumar (ee13b1025@iith.ac.in)
+;
+; This program is free software: you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation, either version 3 of the License, or
+; (at your option) any later version.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;------------------------------------------------------------------------
+; Function:
+;		Initialises the element values of input array to zero.
+;------------------------------------------------------------------------
+; Usage:
+;		void arrayZero(float (*), int);
+;------------------------------------------------------------------------
+; Arguments:
+;		arrayAddress - Address to initialise to zero - int array
+;		length - Length of input array - int
+;------------------------------------------------------------------------
+; Author:
+; 		S Sandeep Kumar
+; 		E-mail : ee13b1025@iith.ac.in
+;************************************************************************
+
+	.global arrayZero
+	.text
+
+arrayZero:	.cproc arrayAddress, length
+			.reg temp, r_radAdd
+			ZERO temp
+			MV arrayAddress, r_radAdd
+
+arrayLoop:	STW temp, *r_radAdd++	; Zero Initialisation
+			SUB length, 1, length
+			[length] B arrayLoop
+			.endproc
+
+;************************************************************************
+; End of arrayZero.sa
+;************************************************************************

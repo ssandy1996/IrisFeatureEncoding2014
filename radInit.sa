@@ -1,0 +1,56 @@
+;************************************************************************
+; Copyright (C) 2014 S Sandeep Kumar (ee13b1025@iith.ac.in)
+;
+; This program is free software: you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation, either version 3 of the License, or
+; (at your option) any later version.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;------------------------------------------------------------------------
+; Function:
+;		Initialises the radius array with frequency values from 0 - 0.5
+;------------------------------------------------------------------------
+; Usage:
+;		void radInit(float (*), int, float, float);
+;------------------------------------------------------------------------
+; Arguments:
+;		radAddress - Address to store frequency values - float array
+;   	length - Length of input array - int
+; 		addVal - Input float value to increment - float
+; 		multiplier - Input float value to multiply - float
+; -----------------------------------------------------------------------
+; Author:
+; 		S Sandeep Kumar
+; 		E-mail : ee13b1025@iith.ac.in
+;************************************************************************
+
+	.global radInit
+	.text
+
+radInit:	.cproc radAddress, length, addVal, multiplier
+			.reg count, temp, r_radAdd, value, addValue
+			ZERO count
+			MV addVal, addValue
+			MV radAddress, r_radAdd
+			MV multiplier, value
+			ADDSP count, addValue, count
+			STW count, *r_radAdd++
+			SUB length, 1, length
+
+radLoop:	MPYSP count, value, temp
+			STW temp, *r_radAdd++
+			ADDSP count, addValue, count
+			SUB length, 1, length
+			[length] B radLoop
+			.endproc
+
+;************************************************************************
+; End of radInit.sa
+;************************************************************************
